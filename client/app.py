@@ -27,8 +27,7 @@ words = {
 }
 
 connection, cursor = database.connectDB()
-database.setUpWordsTable(connection, cursor, words)
-database.printTable(cursor, "words")
+database.setUpWordsTable(cursor, words)
 database.closeDB(connection)
 
 # Load the model

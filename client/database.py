@@ -8,7 +8,7 @@ def connectDB():
 def closeDB(connection):
     connection.close()
 
-def setUpWordsTable(connection, cursor, words):
+def setUpWordsTable(cursor, words):
     cursor.execute(
         '''
         DROP TABLE IF EXISTS words
@@ -30,7 +30,6 @@ def setUpWordsTable(connection, cursor, words):
                 ''', 
                 (word,)
             )
-    connection.commit()
 
 def printTable(cursor, table):
     cursor.execute(
@@ -51,11 +50,10 @@ def checkWord(cursor, word):
     )
     return cursor.fetchone()[0] == 1
 
-def seenWord(connection, cursor, word):
+def seenWord(cursor, word):
     cursor.execute(
         '''
         UPDATE words SET seen = 1 WHERE word = ?
         ''',
         (word,)
     )
-    connection.commit()
