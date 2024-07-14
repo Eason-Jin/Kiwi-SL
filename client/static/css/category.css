@@ -78,6 +78,7 @@ body {
     transition: transform 0.3s;
     position: relative;
     overflow: hidden;
+    cursor: pointer;
 }
 
 

@@ -8,29 +8,6 @@
 </head>
 
 <body>
-    <!-- <div class="container">
-        <button onclick="window.location.href='/pokedex'">Back</button>
-        <h1>{{ category }}</h1>
-        <ul class="cards">
-            {% for word, translation in words.items() %}
-                    <div class="card-content-discovered">
-                        <a href="#" class="{% if word in seen_words %}seen{% endif %}" id="word">{{ word }} - {{ translation }}</a>
-                    </div>
-            {% endfor %}
-        </ul>      
-        <ul class="cards">
-            {% for word, translation in words.items() %}
-                <li class="card {% if word not in seen_words %}blur{% endif %}">
-                    <div class="card-content">
-                        <a href="#" class="{% if word in seen_words %}seen{% endif %}">{{ word }} - {{ translation }}</a>
-                    </div>
-                    {% if word not in seen_words %}
-                    <img src="{{ url_for('static', filename='gallery/lock.png') }}" alt="logo" class="blur-overlay">
-                    {% endif %}
-                </li>
-            {% endfor %}
-        </ul>
-    </div> -->
     <div class="container">
         <button onclick="window.location.href='/pokedex'">Back</button>
         <h1>{{ category }}</h1>
@@ -38,12 +15,30 @@
         <ul class="cards">
             {% for word, translation in words.items() %}
             {% if word in seen_words %}
-            <div class="card-content-discovered">
-                <a href="#" class="seen" id="word">{{ word }} - {{ translation }}</a>
+            <div class="card-container" style="width: 100%;">
+                <div id="card-content-discovered-{{ word }}" class="card-content-discovered">
+                    <a href="#" class="seen" id="word">{{ word }} - {{ translation }}</a>
+                </div>
+                <div id="info-{{ word }}" class="info"
+                    style="display: none; opacity: 0; max-width: 800px; max-height: 400px; padding: 10px 30px; background-color: white; border-bottom-left-radius: 8px; border-bottom-right-radius: 8px; transition: opacity 0.3s ease-in-out;">
+                    <div style="display: grid; grid-template-columns: 1fr 1fr;">
+                        <div style="display: flex; justify-content: left; align-items: center;">
+                            <img src="{{ url_for('static', filename=image_path) }}" alt="{{ word }}"
+                                style="max-width: 50%; height: auto; padding-left: 50px; border-radius: 8px;">
+                        </div>
+                        <div style="display: flex; justify-content: right; align-items: center;">
+                            <video controls="controls" preload="metadata" controlslist="nodownload"
+                                style="max-width: 100%; height: auto; border-radius: 8px;">
+                                <source src="{{ url_for('static', filename='gallery/videos/' + word + '.mp4') }}"
+                                    type="video/mp4">
+                            </video>
+                        </div>
+                    </div>
+                </div>
             </div>
             {% endif %}
             {% endfor %}
-        </ul>   
+        </ul>
 
         <ul class="cards">
             {% for word, translation in words.items() %}
@@ -57,6 +52,46 @@
             {% endfor %}
         </ul>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            document.querySelectorAll('.card-container').forEach(card => {
+                const cardContent = card.querySelector('.card-content-discovered');
+                const info = card.querySelector('.info');
+
+                cardContent.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    hideAllInfo();
+                    if (info.style.display === 'none') {
+                        cardContent.style.borderBottomLeftRadius = '0px';
+                        cardContent.style.borderBottomRightRadius = '0px';
+                        info.style.display = 'block';
+                        setTimeout(() => {
+                            info.style.opacity = '1';
+                        }, 50);
+                    } else {
+                        cardContent.style.borderBottomLeftRadius = '8px';
+                        cardContent.style.borderBottomRightRadius = '8px';
+                        info.style.display = 'none';
+                        info.style.opacity = '0';
+                    }
+                });
+            });
+
+            document.addEventListener('click', () => {
+                hideAllInfo();
+            });
+
+            function hideAllInfo() {
+                document.querySelectorAll('.info').forEach(info => {
+                    const cardContent = info.parentElement.querySelector('.card-content-discovered');
+                    cardContent.style.borderBottomLeftRadius = '8px';
+                    cardContent.style.borderBottomRightRadius = '8px';
+                    info.style.display = 'none';
+                    info.style.opacity = '0';
+                });
+            }
+        });
+    </script>
 </body>
 
 </html>
