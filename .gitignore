@@ -1,5 +1,5 @@
 .DS_Store
-*.jpg
+data/**/*.jpg
 collect_img.py
 create_dataset.py
 drawing.py
